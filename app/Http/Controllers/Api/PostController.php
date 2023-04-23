@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\AllPostsCollection;
 use App\Models\Post;
 use App\Services\FileService;
 use Illuminate\Http\Request;
@@ -22,6 +23,12 @@ class PostController extends Controller
         try {
             $post = new Post;
             $post = (new FileService)->AddVideo($post, $request);
+
+            $post->user_id = auth()->user()->id;
+            $post->text = $request->input('text');
+            $post->save();
+
+            return response()->json(['success' => 'OK'], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         }
@@ -30,9 +37,23 @@ class PostController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Post $post)
+    public function show($id)
     {
-        //
+        try {
+            $post = Post::where('id', $id)->get();
+            $posts = Post::where('user_id', $post[0]->user_id)->get();
+
+            $ids = $posts->map(function ($posts) {
+                return $post->id;
+            });
+
+            return response()->json([
+                'post' => new AllPostsCollection($post),
+                'ids' => $ids
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
     }
 
     /**
