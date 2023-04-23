@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UsersCollection;
 use App\Models\User;
+use App\Services\FileService;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -34,6 +35,9 @@ class UserController extends Controller
 
         try {
             $user = (new FileService)->updateImage(auth()->user(), $request);
+            $user->save();
+
+            return response()->json(['success' => 'OK'], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         }
