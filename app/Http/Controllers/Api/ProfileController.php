@@ -17,7 +17,7 @@ class ProfileController extends Controller
     public function show($id)
     {
         try {
-            $post = Post::where('user_id', $id)->orderBy('created_at', 'desc')->get();
+            $posts = Post::where('user_id', $id)->orderBy('created_at', 'desc')->get();
             $user = User::where('id', $id)->get();
 
             return response()->json([
