@@ -22,7 +22,7 @@ class PostController extends Controller
 
         try {
             $post = new Post;
-            $post = (new FileService)->AddVideo($post, $request);
+            $post = (new FileService)->addVideo($post, $request);
 
             $post->user_id = auth()->user()->id;
             $post->text = $request->input('text');
@@ -43,7 +43,7 @@ class PostController extends Controller
             $post = Post::where('id', $id)->get();
             $posts = Post::where('user_id', $post[0]->user_id)->get();
 
-            $ids = $posts->map(function ($posts) {
+            $ids = $posts->map(function ($post) {
                 return $post->id;
             });
 
