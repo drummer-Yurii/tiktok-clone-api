@@ -25,7 +25,7 @@ class AllPostsCollection extends ResourceCollection
                         'id' => $comment->id,
                         'text' => $comment->text,
                         'user' => [
-                            'id' => $comment->iser->id,
+                            'id' => $comment->user->id,
                             'name' => $comment->user->name,
                             'image' => url('/') . $comment->user->image
                         ],
